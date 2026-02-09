@@ -1,12 +1,15 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 
 const app = express();
-const PORT = process.env.SERVER_PORT || 3001;
+const isProduction = process.env.NODE_ENV === 'production';
+const PORT = isProduction ? 5000 : (process.env.SERVER_PORT || 3001);
+const HOST = isProduction ? '0.0.0.0' : '127.0.0.1';
 const JWT_SECRET = process.env.JWT_SECRET || 'localvibe_jwt_secret_2024';
 
 const pool = new Pool({
@@ -302,6 +305,13 @@ app.get('/api/rsvp/:eventId/attendees', async (req, res) => {
   }
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+if (isProduction) {
+  app.use(express.static(path.join(__dirname, '..', 'dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
+  });
+}
+
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on ${HOST}:${PORT}`);
 });

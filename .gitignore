@@ -3,6 +3,5 @@ dist
 server/.env
 
 
-.replit
 .local
 *.bin
