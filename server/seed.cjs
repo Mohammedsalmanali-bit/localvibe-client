@@ -114,7 +114,7 @@ const seedEvents = async (users) => {
       lng: -73.9442,
       lat: 40.7214,
       price: 10,
-      image: 'https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=800',
+      image: 'https://images.unsplash.com/photo-1517462964-21fdcec3f25b?w=800',
       organizer_id: users[0]?.id || 1,
       organizer_name: users[0]?.name || 'Sarah Johnson',
       is_featured: false,
