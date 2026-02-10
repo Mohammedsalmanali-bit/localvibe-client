@@ -8,7 +8,12 @@
     "server": "node server/server.cjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "compose:up": "docker compose up -d --build",
+    "compose:seed": "docker compose --profile seed up seed",
+    "compose:down": "docker compose down",
+    "compose:reset": "docker compose down -v",
+    "dev:compose": "npm run compose:up && npm run compose:seed"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

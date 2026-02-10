@@ -31,8 +31,7 @@ LocalVibe is a full-stack web application that helps users discover and create l
 
 ### Backend
 - **Node.js** with Express
-- **MongoDB** with Mongoose
-- **Geospatial queries** with 2dsphere indexes
+- **PostgreSQL** with `pg`
 - **JWT** authentication
 - **Express Validator** for input validation
 
@@ -40,9 +39,32 @@ LocalVibe is a full-stack web application that helps users discover and create l
 
 ### Prerequisites
 - Node.js 18+
-- MongoDB (local or Atlas)
+- Docker Desktop (recommended for dev)
 
-### Installation
+### Installation (Docker Compose)
+
+1. Build and start services:
+```bash
+npm run compose:up
+```
+
+2. Seed the database:
+```bash
+npm run compose:seed
+```
+
+3. Open the app at `http://localhost:5000`
+
+Or do both with one command:
+```bash
+npm run dev:compose
+```
+
+### Notes
+- **Docker-only setup**: You can run everything with Docker even if Node.js is not installed locally.
+- **Node.js setup**: On another machine with Node.js installed, you can run the app with the manual/local dev steps below (you still need Postgres and `DATABASE_URL`).
+
+### Installation (Manual / Local Dev)
 
 1. Clone the repository:
 ```bash
@@ -65,8 +87,9 @@ npm install
 
 Create a `.env` file in the `server` directory:
 ```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/localvibe
+SERVER_PORT=3001
+HOST=127.0.0.1
+DATABASE_URL=postgres://postgres:localvibe@localhost:5432/localvibe
 JWT_SECRET=your_jwt_secret_key_here
 NODE_ENV=development
 ```
@@ -74,7 +97,7 @@ NODE_ENV=development
 5. Seed the database with sample data:
 ```bash
 cd server
-npm run seed
+node seed.cjs
 ```
 
 6. Start the development servers:
@@ -82,7 +105,7 @@ npm run seed
 Backend:
 ```bash
 cd server
-npm run dev
+node server.cjs
 ```
 
 Frontend (in a new terminal):
@@ -90,7 +113,7 @@ Frontend (in a new terminal):
 npm run dev
 ```
 
-7. Open your browser and navigate to `http://localhost:5173`
+7. Open your browser and navigate to `http://localhost:5000`
 
 ## Demo Credentials
 
@@ -123,10 +146,9 @@ Or create your own account!
 
 ## Geospatial Features
 
-LocalVibe uses MongoDB's geospatial capabilities for location-based queries:
+LocalVibe uses stored coordinates for location-based queries:
 
-- **2dsphere Index**: Enables efficient geospatial queries on event locations
-- **Radius Search**: Find events within a specified distance
+- **Radius Search**: Find events within a specified distance (planned)
 - **Bounds Search**: Get events within map viewport boundaries
 - **Address Geocoding**: Convert addresses to coordinates using OpenStreetMap Nominatim
 
@@ -146,7 +168,7 @@ The backend can be deployed to services like Heroku, Railway, or Render:
 
 ```bash
 cd server
-npm start
+node server.cjs
 ```
 
 ### Environment Variables for Production
@@ -157,6 +179,7 @@ Make sure to set these environment variables in your production environment:
 - `JWT_SECRET` - A secure random string for JWT signing
 - `NODE_ENV` - Set to `production`
 - `CORS_ORIGIN` - Your frontend URL (for CORS)
+ - `DATABASE_URL` - PostgreSQL connection string
 
 ## API Key Management
 
@@ -185,11 +208,10 @@ localvibe/
 │   ├── types/              # TypeScript types
 │   └── App.tsx             # Main App component
 ├── server/
-│   ├── models/             # Mongoose models
-│   ├── routes/             # API routes
 │   ├── middleware/         # Express middleware
-│   ├── seed.js             # Database seed script
-│   └── server.js           # Express server
+│   ├── middleware/         # Express middleware
+│   ├── seed.cjs            # Database seed script
+│   └── server.cjs          # Express server
 └── README.md
 ```
 

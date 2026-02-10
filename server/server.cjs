@@ -5,11 +5,12 @@ const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
+const { auth, optionalAuth } = require('./middleware/auth.cjs');
 
 const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
 const PORT = isProduction ? 5000 : (process.env.SERVER_PORT || 3001);
-const HOST = isProduction ? '0.0.0.0' : '127.0.0.1';
+const HOST = process.env.HOST || (isProduction ? '0.0.0.0' : '127.0.0.1');
 const JWT_SECRET = process.env.JWT_SECRET || 'localvibe_jwt_secret_2024';
 
 const pool = new Pool({
@@ -18,32 +19,6 @@ const pool = new Pool({
 
 app.use(cors());
 app.use(express.json());
-
-const auth = async (req, res, next) => {
-  try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    if (!token) return res.status(401).json({ error: 'No token, authorization denied' });
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const result = await pool.query('SELECT id, name, email, avatar, is_organizer FROM users WHERE id = $1', [decoded.userId]);
-    if (result.rows.length === 0) return res.status(401).json({ error: 'Token is not valid' });
-    req.user = result.rows[0];
-    next();
-  } catch (error) {
-    res.status(401).json({ error: 'Token is not valid' });
-  }
-};
-
-const optionalAuth = async (req, res, next) => {
-  try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    if (token) {
-      const decoded = jwt.verify(token, JWT_SECRET);
-      const result = await pool.query('SELECT id, name, email, avatar, is_organizer FROM users WHERE id = $1', [decoded.userId]);
-      if (result.rows.length > 0) req.user = result.rows[0];
-    }
-    next();
-  } catch { next(); }
-};
 
 app.post('/api/users/register', [
   body('name').trim().notEmpty(),

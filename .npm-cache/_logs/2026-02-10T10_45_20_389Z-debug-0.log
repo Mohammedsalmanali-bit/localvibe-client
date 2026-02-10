@@ -1,0 +1,31 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.8.2
+2 info using node@v20.20.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\webdevmin1\localvibe_client_complete\localvibe-client\.npmrc
+5 silly config load:file:C:\Users\Muska\.npmrc
+6 silly config load:file:C:\Users\Muska\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm run dev:compose
+8 verbose argv "run" "dev:compose"
+9 verbose logfile logs-max:10 dir:C:\webdevmin1\localvibe_client_complete\localvibe-client\.npm-cache\_logs\2026-02-10T10_45_20_389Z-
+10 verbose logfile C:\webdevmin1\localvibe_client_complete\localvibe-client\.npm-cache\_logs\2026-02-10T10_45_20_389Z-debug-0.log
+11 silly logfile done cleaning log files
+12 verbose stack Error: spawn C:\WINDOWS/System32 ENOENT
+12 verbose stack     at ChildProcess._handle.onexit (node:internal/child_process:285:19)
+12 verbose stack     at onErrorNT (node:internal/child_process:483:16)
+12 verbose stack     at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+13 verbose pkgid my-app@0.0.0
+14 error code ENOENT
+15 error syscall spawn C:\WINDOWS/System32
+16 error path C:\webdevmin1\localvibe_client_complete\localvibe-client
+17 error errno -4058
+18 error enoent spawn C:\WINDOWS/System32 ENOENT
+19 error enoent This is related to npm not being able to find a file.
+19 error enoent
+20 verbose cwd C:\webdevmin1\localvibe_client_complete\localvibe-client
+21 verbose os Windows_NT 10.0.26200
+22 verbose node v20.20.0
+23 verbose npm  v10.8.2
+24 verbose exit -4058
+25 verbose code -4058
+26 error A complete log of this run can be found in: C:\webdevmin1\localvibe_client_complete\localvibe-client\.npm-cache\_logs\2026-02-10T10_45_20_389Z-debug-0.log

@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const { Pool } = require('pg');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key_here';
+const JWT_SECRET = process.env.JWT_SECRET || 'localvibe_jwt_secret_2024';
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 // Verify JWT token
 const auth = async (req, res, next) => {
@@ -13,13 +16,16 @@ const auth = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.userId).select('-password');
-    
-    if (!user) {
+    const result = await pool.query(
+      'SELECT id, name, email, avatar, is_organizer FROM users WHERE id = $1',
+      [decoded.userId]
+    );
+
+    if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Token is not valid' });
     }
 
-    req.user = user;
+    req.user = result.rows[0];
     next();
   } catch (error) {
     res.status(401).json({ error: 'Token is not valid' });
@@ -38,12 +44,15 @@ const optionalAuth = async (req, res, next) => {
     
     if (token) {
       const decoded = jwt.verify(token, JWT_SECRET);
-      const user = await User.findById(decoded.userId).select('-password');
-      if (user) {
-        req.user = user;
+      const result = await pool.query(
+        'SELECT id, name, email, avatar, is_organizer FROM users WHERE id = $1',
+        [decoded.userId]
+      );
+      if (result.rows.length > 0) {
+        req.user = result.rows[0];
       }
     }
-    
+
     next();
   } catch (error) {
     next();
